@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@parcel/config-default": "^2.8.2",
     "@parcel/transformer-glsl": "2.8.2",
     "@parcel/validator-typescript": "^2.8.2",
     "@types/react": "^18.0.26",
