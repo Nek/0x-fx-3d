@@ -1,16 +1,24 @@
-import v from './waves.vert'
-import f from './waves.frag'
+import vert from './plasma.vert'
+import frag from './plasma.frag'
 import { Suspense, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { DoubleSide } from 'three'
-import { Center, PerspectiveCamera, useAspect } from '@react-three/drei'
+import { DoubleSide, FrontSide, Vector2 } from 'three'
+import { PerspectiveCamera, useAspect } from '@react-three/drei'
 
-const Wave = () => {
+const Scene = () => {
 	const mesh = useRef()
+
+	const { viewport } = useThree()
+
+	const scale = useAspect(viewport.width, viewport.height)
+
+	const uAspectRatio = scale[0] / scale[1];
+
 	useFrame((state) => {
 		const { clock } = state
 		if (mesh.current) {
 			mesh.current.material.uniforms.uTime.value = clock.getElapsedTime()
+			mesh.current.material.uniforms.uAspectRatio.value = uAspectRatio
 		}
 	})
 
@@ -20,33 +28,38 @@ const Wave = () => {
 				value: 1.0,
 			},
 			uRes: {
-				value: [1024, 1024],
+				value: new Vector2(1024, 1024),
 			},
+			uAspectRatio: {
+				value: uAspectRatio,
+			}
 		}),
 		[]
 	)
 
 	return (
-		<mesh ref={mesh} >
-			<planeGeometry args={[2, 2]} />
-			<shaderMaterial uniforms={uniforms} fragmentShader={f} vertexShader={v} side={DoubleSide} />
-		</mesh>
-	)
-}
-const Scene = () => {
-	return (
-		<Canvas>
-			<PerspectiveCamera makeDefault position={[0, 0, 10]} />
-
-			<Suspense fallback={'loading...'}>
-				<Wave />
-			</Suspense>
-		</Canvas >
+		<>
+			<mesh ref={mesh}>
+				<sphereGeometry args={[1, 64, 32]} />
+				<shaderMaterial uniforms={uniforms} fragmentShader={frag} vertexShader={vert} side={DoubleSide} />
+			</mesh>
+			<mesh ref={mesh} position={[0, 0, 0]} scale={scale}>
+				<planeGeometry args={[1, 1]} />
+				<shaderMaterial uniforms={uniforms} fragmentShader={frag} vertexShader={vert} side={FrontSide} />
+			</mesh>
+		</>
 	)
 }
 
 const App = () => {
-	return <Scene />
+	return (
+		<Canvas>
+			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
+			<Suspense fallback={'loading...'}>
+				<Scene />
+			</Suspense>
+		</Canvas >
+	)
 }
 
 export default App

@@ -2,6 +2,9 @@ precision mediump float;
 
 uniform highp float uTime;
 uniform vec2 uRes;
+uniform float uAspectRatio;
+
+varying vec2 vUv;
 
 void main(void) {
     float scale = 0.01;
@@ -9,8 +12,8 @@ void main(void) {
     float r1 = 0.4 ; 
     float r2 = 0.9 ; 
     float r3 = 0.29; 
-    float x = gl_FragCoord.x;
-    float y = gl_FragCoord.y;
+    float x = vUv.x * uRes.x * uAspectRatio;
+    float y = vUv.y * uRes.y;
     float h = uRes.y;
     float w = uRes.x;
 
@@ -21,7 +24,6 @@ void main(void) {
       sin(distance( vec2(1.0 / x * r3 , y * r2), vec2(h, w) ) * scale);    
     
     vec3 color = vec3( 0.5 + 0.5 * sin(col), cos(col), cos(col) - sin(col)) + 0.1;
-    color += mod(gl_FragCoord.x, 2.0) < 1.0 ? 0.0 : 0.4;                                    
-    
+    color += mod(vUv.x, 2.0) < 1.0 ? 0.0 : 0.4;                                    
     gl_FragColor = vec4(color,  1.0);
 }
