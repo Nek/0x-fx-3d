@@ -2,7 +2,6 @@ import vert from './plasma.vert'
 import frag from './plasma.frag'
 import { Suspense, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { DoubleSide, FrontSide, Vector2 } from 'three'
 import { PerspectiveCamera, useAspect } from '@react-three/drei'
 
 const Scene = () => {
@@ -28,7 +27,7 @@ const Scene = () => {
 				value: 1.0,
 			},
 			uRes: {
-				value: new Vector2(1024, 1024),
+				value: [1024, 1024],
 			},
 			uAspectRatio: {
 				value: uAspectRatio,
@@ -41,11 +40,11 @@ const Scene = () => {
 		<>
 			<mesh ref={mesh}>
 				<sphereGeometry args={[1, 64, 32]} />
-				<shaderMaterial uniforms={uniforms} fragmentShader={frag} vertexShader={vert} side={DoubleSide} />
+				<shaderMaterial uniforms={uniforms} fragmentShader={frag} vertexShader={vert} />
 			</mesh>
 			<mesh ref={mesh} position={[0, 0, 0]} scale={scale}>
 				<planeGeometry args={[1, 1]} />
-				<shaderMaterial uniforms={uniforms} fragmentShader={frag} vertexShader={vert} side={FrontSide} />
+				<shaderMaterial uniforms={uniforms} fragmentShader={frag} vertexShader={vert} />
 			</mesh>
 		</>
 	)
