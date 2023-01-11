@@ -1,10 +1,11 @@
 import vert from './plasma.vert?raw'
 import frag from './plasma.frag?raw'
-import { Suspense, useMemo, useRef } from 'react'
+import { Suspense, useCallback, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree, extend } from '@react-three/fiber'
 import { PerspectiveCamera } from '@react-three/drei/core/PerspectiveCamera'
 import { Stats } from '@react-three/drei/core/Stats'
 import { useAspect } from '@react-three/drei/core/useAspect'
+import type { ShaderMaterialProps } from '@react-three/fiber'
 
 import { useControls, folder } from 'leva'
 
@@ -16,8 +17,14 @@ import { DepthOfField, EffectComposer, Noise, Scanline } from '@react-three/post
 
 
 const Scene = () => {
-	const sphereMesh = useRef()
-	const planeMesh = useRef()
+	const [sphereMaterial, setSphereMaterial] = useState<ShaderMaterial | undefined>(undefined)
+	const sphereMaterialRef = useCallback((node: ShaderMaterial) => {
+		setSphereMaterial(node)
+	}, [])
+	const [planeMaterial, setPlaneMaterial] = useState<ShaderMaterial | undefined>(undefined)
+	const planeMaterialRef = useCallback((node: ShaderMaterial) => {
+		setPlaneMaterial(node)
+	}, [])
 
 	const { viewport } = useThree()
 
@@ -54,7 +61,7 @@ const Scene = () => {
 			step: 1,
 			value: 12,
 		},
-		'Ratios': folder({
+		Ratios: folder({
 			R1: {
 				value: 10,
 				min: 10,
@@ -85,40 +92,39 @@ const Scene = () => {
 
 	useFrame((state) => {
 		const { clock } = state
-		if (sphereMesh.current) {
-			sphereMesh.current.material.uniforms.uTime.value = clock.getElapsedTime() / 5
-			sphereMesh.current.material.uniforms.uAspectRatio.value = uAspectRatio
-			sphereMesh.current.material.uniforms.uScale.value = plasmaData.Scale / 1000
-			sphereMesh.current.material.uniforms.uR.value = [plasmaData.R1 / 100, plasmaData.R2 / 100, plasmaData.R3 / 100]
-			sphereMesh.current.material.uniforms.uFlip.value = 1.0
+		if (sphereMaterial) {
+			sphereMaterial.uniforms.uTime.value = clock.getElapsedTime() / 5
+			sphereMaterial.uniforms.uAspectRatio.value = uAspectRatio
+			sphereMaterial.uniforms.uScale.value = plasmaData.Scale / 1000
+			sphereMaterial.uniforms.uR.value = [plasmaData.R1 / 100, plasmaData.R2 / 100, plasmaData.R3 / 100]
+			sphereMaterial.uniforms.uFlip.value = 1.0
 		}
-		if (planeMesh.current) {
-			planeMesh.current.material.uniforms.uTime.value = clock.getElapsedTime() / 5
-			planeMesh.current.material.uniforms.uAspectRatio.value = uAspectRatio
-			planeMesh.current.material.uniforms.uScale.value = plasmaData.Scale / 1000
-			planeMesh.current.material.uniforms.uR.value = [plasmaData.R1 / 100, plasmaData.R2 / 100, plasmaData.R3 / 100]
-			planeMesh.current.material.uniforms.uFlip.value = 1.0
-
+		if (planeMaterial) {
+			planeMaterial.uniforms.uTime.value = clock.getElapsedTime() / 5
+			planeMaterial.uniforms.uAspectRatio.value = uAspectRatio
+			planeMaterial.uniforms.uScale.value = plasmaData.Scale / 1000
+			planeMaterial.uniforms.uR.value = [plasmaData.R1 / 100, plasmaData.R2 / 100, plasmaData.R3 / 100]
+			planeMaterial.uniforms.uFlip.value = 1.0
 		}
 	})
 
 	return (
 		<>
-			<mesh ref={sphereMesh} scale={1.5}>
+			<mesh scale={1.5}>
 				<sphereGeometry args={[1, 128, 64]} />
-				<shaderMaterial uniforms={uniforms} fragmentShader={frag} vertexShader={vert} />
+				<shaderMaterial ref={sphereMaterialRef} uniforms={uniforms} fragmentShader={frag} vertexShader={vert} />
 			</mesh>
-			<mesh ref={planeMesh} scale={scale}>
+			<mesh scale={scale}>
 				<planeGeometry args={[1, 1]} />
-				<shaderMaterial uniforms={uniforms} fragmentShader={frag} vertexShader={vert} />
+				<shaderMaterial ref={planeMaterialRef} uniforms={uniforms} fragmentShader={frag} vertexShader={vert} />
 			</mesh>
 			<EffectComposer>
-				{plasmaData.DOF && <DepthOfField focusDistance={4} focalLength={0.2} bokehScale={2} height={1024} />}
-				{plasmaData.Scanline && <Scanline
+				{plasmaData.DOF ? <DepthOfField focusDistance={4} focalLength={0.2} bokehScale={2} height={1024} /> : <></>}
+				{plasmaData.Scanline ? <Scanline
 					blendFunction={BlendFunction.OVERLAY} // blend mode
 					density={1.25} // scanline density
-				/>}
-				{plasmaData.Noise && <Noise opacity={0.7} />}
+				/> : <></>}
+				{plasmaData.Noise ? <Noise opacity={0.7} /> : <></>}
 			</EffectComposer>
 		</>
 	)
