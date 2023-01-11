@@ -4,15 +4,20 @@ uniform highp float uTime;
 uniform vec2 uRes;
 uniform float uAspectRatio;
 
+uniform float uScale;
+uniform vec3 uR;
+uniform float uFlip;
+
 varying vec2 vUv;
 
 void main(void) {
-    float scale = 0.01;
+    float scale = uScale;
     float time = uTime * 100.0;
-    float r1 = 0.4 ; 
-    float r2 = 0.9 ; 
-    float r3 = 0.29; 
-    float x = vUv.x * uRes.x * uAspectRatio;
+    float flip = uFlip;
+    float r1 = uR.x;
+    float r2 = uR.y;
+    float r3 = uR.z;
+    float x = ((flip > 0.0) ? (1.0 - vUv.x) : vUv.x) * uRes.x * uAspectRatio;
     float y = vUv.y * uRes.y;
     float h = uRes.y;
     float w = uRes.x;
