@@ -1,11 +1,19 @@
-import vert from './plasma.vert'
-import frag from './plasma.frag'
+import vert from './plasma.vert?raw'
+import frag from './plasma.frag?raw'
 import { Suspense, useMemo, useRef } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { PerspectiveCamera, useAspect } from '@react-three/drei'
-import { DepthOfField, EffectComposer, Noise, Scanline } from '@react-three/postprocessing'
+import { Canvas, useFrame, useThree, extend } from '@react-three/fiber'
+import { PerspectiveCamera } from '@react-three/drei/core/PerspectiveCamera'
+import { Stats } from '@react-three/drei/core/Stats'
+import { useAspect } from '@react-three/drei/core/useAspect'
+
 import { useControls, folder } from 'leva'
+
+import { SphereGeometry, PlaneGeometry, Mesh, ShaderMaterial } from 'three'
+extend({ SphereGeometry, PlaneGeometry, Mesh, ShaderMaterial })
+
 import { BlendFunction } from 'postprocessing'
+import { DepthOfField, EffectComposer, Noise, Scanline } from '@react-three/postprocessing'
+
 
 const Scene = () => {
 	const sphereMesh = useRef()
@@ -15,7 +23,7 @@ const Scene = () => {
 
 	const scale = useAspect(viewport.width, viewport.height)
 
-	const uAspectRatio = scale[0] / scale[1];
+	const uAspectRatio = scale[0] / scale[1]
 
 	const uniforms = useMemo(
 		() => ({
@@ -23,13 +31,13 @@ const Scene = () => {
 				value: 1.0,
 			},
 			uRes: {
-				value: [1024, 1024],
+				value: [256, 256],
 			},
 			uAspectRatio: {
 				value: uAspectRatio,
 			},
 			uScale: {
-				value: 4 / 100,
+				value: 12 / 100,
 			},
 			uR: {
 				value: [20 / 100, 120 / 100, 19 / 100]
@@ -44,7 +52,7 @@ const Scene = () => {
 			min: 2,
 			max: 50,
 			step: 1,
-			value: 3,
+			value: 12,
 		},
 		'Ratios': folder({
 			R1: {
@@ -67,9 +75,9 @@ const Scene = () => {
 			},
 		}),
 		FX: folder({
-			DOF: false,
+			DOF: true,
 			Scanline: false,
-			Noise: false
+			Noise: true
 		})
 	}
 
@@ -78,14 +86,14 @@ const Scene = () => {
 	useFrame((state) => {
 		const { clock } = state
 		if (sphereMesh.current) {
-			sphereMesh.current.material.uniforms.uTime.value = clock.getElapsedTime()
+			sphereMesh.current.material.uniforms.uTime.value = clock.getElapsedTime() / 5
 			sphereMesh.current.material.uniforms.uAspectRatio.value = uAspectRatio
 			sphereMesh.current.material.uniforms.uScale.value = plasmaData.Scale / 1000
 			sphereMesh.current.material.uniforms.uR.value = [plasmaData.R1 / 100, plasmaData.R2 / 100, plasmaData.R3 / 100]
 			sphereMesh.current.material.uniforms.uFlip.value = 1.0
 		}
 		if (planeMesh.current) {
-			planeMesh.current.material.uniforms.uTime.value = clock.getElapsedTime()
+			planeMesh.current.material.uniforms.uTime.value = clock.getElapsedTime() / 5
 			planeMesh.current.material.uniforms.uAspectRatio.value = uAspectRatio
 			planeMesh.current.material.uniforms.uScale.value = plasmaData.Scale / 1000
 			planeMesh.current.material.uniforms.uR.value = [plasmaData.R1 / 100, plasmaData.R2 / 100, plasmaData.R3 / 100]
@@ -106,9 +114,6 @@ const Scene = () => {
 			</mesh>
 			<EffectComposer>
 				{plasmaData.DOF && <DepthOfField focusDistance={4} focalLength={0.2} bokehScale={2} height={1024} />}
-				{/*<Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} />*/}
-					
-				{/*<Vignette eskil={false} offset={0.1} darkness={1.1} />*/}
 				{plasmaData.Scanline && <Scanline
 					blendFunction={BlendFunction.OVERLAY} // blend mode
 					density={1.25} // scanline density
@@ -122,6 +127,7 @@ const Scene = () => {
 const App = () => {
 	return (
 		<Canvas>
+			<Stats />
 			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
 			<Suspense fallback={'loading...'}>
 				<Scene />
