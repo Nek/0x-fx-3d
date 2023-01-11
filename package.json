@@ -14,7 +14,6 @@
     "@parcel/validator-typescript": "^2.8.2",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.10",
-    "@types/three": "^0.148.0",
     "buffer": "^5.7.1",
     "parcel": "^2.8.2",
     "process": "^0.11.10",
@@ -23,14 +22,17 @@
   "dependencies": {
     "@react-three/drei": "^9.51.23",
     "@react-three/fiber": "^8.10.0",
+    "@react-three/flex": "^1.0.1",
+    "@types/three": "^0.148.0",
     "glsl-noise": "^0.0.0",
+    "lamina": "^1.1.23",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.148.0"
   },
   "prettier": {
     "trailingComma": "es5",
-    "tabWidth": 4,
+    "tabWidth": 2,
     "semi": false,
     "singleQuote": true
   }

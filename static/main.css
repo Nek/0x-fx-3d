@@ -1,9 +1,7 @@
-body {
-	width: 100%;
-	overflow: hidden;
-}
-
-* {
-	padding: 0;
+html,
+body,
+#app,
+#app>div {
+	height: 100%;
 	margin: 0;
 }

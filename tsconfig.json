@@ -3,9 +3,8 @@
 		"src/**/*"
 	],
 	"compilerOptions": {
-		"target": "es2021",
-		"strict": true,
 		"jsx": "react-jsx",
-		"moduleResolution": "node"
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true
 	}
 }

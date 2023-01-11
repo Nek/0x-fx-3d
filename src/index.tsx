@@ -1,7 +1,3 @@
-import * as THREE from '@react-three/fiber'
-import { useFrame, useLoader } from '@react-three/fiber'
-import { useRef } from 'react'
-
 import { createRoot } from 'react-dom/client'
 import App from './App'
 
