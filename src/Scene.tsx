@@ -1,23 +1,22 @@
 import vert from './plasma.vert?raw'
 import frag from './plasma.frag?raw'
 import { Suspense, useMemo, useRef } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { PerspectiveCamera } from '@react-three/drei/core/PerspectiveCamera'
-import { Stats } from '@react-three/drei/core/Stats'
-import { useAspect } from '@react-three/drei/core/useAspect'
+
+import { PerspectiveCamera, Stats, useAspect } from '@react-three/drei'
 
 import { useControls, folder } from 'leva'
 
 import { BlendFunction } from 'postprocessing'
 import { DepthOfField, EffectComposer, Noise, Scanline } from '@react-three/postprocessing'
-import { ShaderMaterial } from 'three/src/Three'
-
+import { ShaderMaterial } from 'three'
+extend({ ShaderMaterial })
+import { extend, useFrame, useThree } from '@react-three/fiber'
 
 const Scene = () => {
 	const sphereMaterialRef = useRef<ShaderMaterial>(null!)
 	const planeMaterialRef = useRef<ShaderMaterial>(null!)
 
-	const { viewport } = useThree()
+	const { viewport, gl } = useThree()
 
 	const scale = useAspect(viewport.width, viewport.height)
 
@@ -99,10 +98,13 @@ const Scene = () => {
 			planeMaterial.uniforms.uR.value = [plasmaData.R1 / 100, plasmaData.R2 / 100, plasmaData.R3 / 100]
 			planeMaterial.uniforms.uFlip.value = 1.0
 		}
+
 	})
 
 	return (
-		<>
+		<Suspense fallback={'loading...'}>
+			<Stats />
+			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
 			<mesh scale={1.5}>
 				<sphereGeometry args={[1, 128, 64]} />
 				<shaderMaterial ref={sphereMaterialRef} uniforms={uniforms} fragmentShader={frag} vertexShader={vert} />
@@ -119,21 +121,10 @@ const Scene = () => {
 				/> : <></>}
 				{plasmaData.Noise ? <Noise opacity={0.7} /> : <></>}
 			</EffectComposer>
-		</>
+		</Suspense>
+
 	)
 }
 
-const App = () => {
-	return (
-		<Canvas>
-			<Stats />
-			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
-			<Suspense fallback={'loading...'}>
-				<Scene />
-			</Suspense>
-		</Canvas >
-	)
-}
-
-export default App
+export default Scene
 

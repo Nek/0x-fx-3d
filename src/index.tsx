@@ -1,16 +1,17 @@
-import { createRoot } from 'react-dom/client'
-import { SphereGeometry } from 'three/src/geometries/SphereGeometry'
-import { PlaneGeometry } from 'three/src/geometries/PlaneGeometry'
-import { Mesh } from 'three/src/objects/Mesh'
-import { ShaderMaterial } from 'three/src/materials/ShaderMaterial'
-import { PerspectiveCamera } from 'three/src/cameras/PerspectiveCamera'
-import { Group } from 'three/src/objects/Group'
-extend({ SphereGeometry, PlaneGeometry, Mesh, ShaderMaterial, PerspectiveCamera, Group })
+import { createRoot, events, extend } from '@react-three/fiber'
+import { StrictMode } from 'react'
+import { Group, Mesh, PerspectiveCamera, PlaneGeometry, SphereGeometry } from 'three'
 
-import App from './App'
+extend({ SphereGeometry, PlaneGeometry, Mesh, PerspectiveCamera, Group })
+
+import Scene from './Scene'
 import './main.css'
-import { extend } from '@react-three/fiber'
 
-const container = document.getElementById('app')!
-const root = createRoot(container)
-root.render(<App />)
+const root = createRoot(document.querySelector('canvas')!)
+
+window.addEventListener('resize', () => {
+	root.configure({ events, camera: { position: [0, 0, 50] }, size: { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight } })
+	root.render(<StrictMode><Scene /></StrictMode>)
+})
+
+window.dispatchEvent(new Event('resize'))
