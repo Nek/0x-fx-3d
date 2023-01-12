@@ -1,30 +1,21 @@
 import vert from './plasma.vert?raw'
 import frag from './plasma.frag?raw'
-import { Suspense, useCallback, useMemo, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree, extend } from '@react-three/fiber'
+import { Suspense, useMemo, useRef } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { PerspectiveCamera } from '@react-three/drei/core/PerspectiveCamera'
 import { Stats } from '@react-three/drei/core/Stats'
 import { useAspect } from '@react-three/drei/core/useAspect'
-import type { ShaderMaterialProps } from '@react-three/fiber'
 
 import { useControls, folder } from 'leva'
 
-import { SphereGeometry, PlaneGeometry, Mesh, ShaderMaterial } from 'three'
-extend({ SphereGeometry, PlaneGeometry, Mesh, ShaderMaterial })
-
 import { BlendFunction } from 'postprocessing'
 import { DepthOfField, EffectComposer, Noise, Scanline } from '@react-three/postprocessing'
+import { ShaderMaterial } from 'three/src/Three'
 
 
 const Scene = () => {
-	const [sphereMaterial, setSphereMaterial] = useState<ShaderMaterial | undefined>(undefined)
-	const sphereMaterialRef = useCallback((node: ShaderMaterial) => {
-		setSphereMaterial(node)
-	}, [])
-	const [planeMaterial, setPlaneMaterial] = useState<ShaderMaterial | undefined>(undefined)
-	const planeMaterialRef = useCallback((node: ShaderMaterial) => {
-		setPlaneMaterial(node)
-	}, [])
+	const sphereMaterialRef = useRef<ShaderMaterial>(null!)
+	const planeMaterialRef = useRef<ShaderMaterial>(null!)
 
 	const { viewport } = useThree()
 
@@ -92,14 +83,16 @@ const Scene = () => {
 
 	useFrame((state) => {
 		const { clock } = state
-		if (sphereMaterial) {
+		if (sphereMaterialRef.current) {
+			const sphereMaterial = sphereMaterialRef.current
 			sphereMaterial.uniforms.uTime.value = clock.getElapsedTime() / 5
 			sphereMaterial.uniforms.uAspectRatio.value = uAspectRatio
 			sphereMaterial.uniforms.uScale.value = plasmaData.Scale / 1000
 			sphereMaterial.uniforms.uR.value = [plasmaData.R1 / 100, plasmaData.R2 / 100, plasmaData.R3 / 100]
 			sphereMaterial.uniforms.uFlip.value = 1.0
 		}
-		if (planeMaterial) {
+		if (planeMaterialRef.current) {
+			const planeMaterial = planeMaterialRef.current
 			planeMaterial.uniforms.uTime.value = clock.getElapsedTime() / 5
 			planeMaterial.uniforms.uAspectRatio.value = uAspectRatio
 			planeMaterial.uniforms.uScale.value = plasmaData.Scale / 1000
