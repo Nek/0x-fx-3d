@@ -1,6 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@elemaudio/core': ^1.0.8
+  '@elemaudio/web-renderer': ^1.0.16
   '@react-three/drei': ^9.51.23
   '@react-three/fiber': ^8.10.0
   '@react-three/postprocessing': ^2.7.0
@@ -17,6 +19,8 @@ specifiers:
   vite: ^4.0.0
 
 dependencies:
+  '@elemaudio/core': 1.0.8
+  '@elemaudio/web-renderer': 1.0.16
   '@react-three/drei': 9.51.24_ujgrnjqg6qzyiwznfocw5cghpm
   '@react-three/fiber': 8.10.0_4tzez3c2xpzuefjrvhpyy55bva
   '@react-three/postprocessing': 2.7.0_gomtgsyi2ezk55nxt2bgusgpbu
@@ -64,6 +68,21 @@ packages:
 
   /@chevrotain/utils/10.4.2:
     resolution: {integrity: sha512-V34dacxWLwKcvcy32dx96ADJVdB7kOJLm7LyBkBQw5u5HC9WdEFw2G17zml+U3ivavGTrGPJHl8o9/UJm0PlUw==}
+    dev: false
+
+  /@elemaudio/core/1.0.8:
+    resolution: {integrity: sha512-+chojEufEKg5vS1b4UL+IYYOa6ijqiYDpFCGrw6QnW5Icf+nPX6/+cKyU14jWfrmE4j3C/Y/hdV1qRwzLmWIFQ==}
+    dependencies:
+      invariant: 2.2.4
+      shallowequal: 1.1.0
+    dev: false
+
+  /@elemaudio/web-renderer/1.0.16:
+    resolution: {integrity: sha512-uwyk9QMfV4QGndQ78bp3mw4q5jlr8zmGDmEnjQvNiMXHqMSd3p4TBVA/bN/zUifgwk7dRO4P6xdb5jrr4IzF+Q==}
+    dependencies:
+      '@elemaudio/core': 1.0.8
+      '@types/events': 3.0.0
+      events: 3.3.0
     dev: false
 
   /@esbuild/android-arm/0.16.16:
@@ -766,6 +785,10 @@ packages:
       '@swc/core-win32-x64-msvc': 1.3.26
     dev: true
 
+  /@types/events/3.0.0:
+    resolution: {integrity: sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==}
+    dev: false
+
   /@types/offscreencanvas/2019.7.0:
     resolution: {integrity: sha512-PGcyveRIpL1XIqK8eBsmRBt76eFgtzuPiSTyKHZxnGemp2yzGzWpjYKAfK3wIMiU7eH+851yEpiuP8JZerTmWg==}
     dev: false
@@ -918,6 +941,11 @@ packages:
       '@esbuild/win32-x64': 0.16.16
     dev: true
 
+  /events/3.3.0:
+    resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
+    engines: {node: '>=0.8.x'}
+    dev: false
+
   /extend-shallow/2.0.1:
     resolution: {integrity: sha512-zCnTtlxNoAiDc3gqY2aYAWFx7XWWiasuF2K8Me5WbN8otHKTUKBwjPtNpRs/rbUZm7KxWAaNj7P1a/p52GbVug==}
     engines: {node: '>=0.10.0'}
@@ -976,6 +1004,12 @@ packages:
     dependencies:
       function-bind: 1.1.1
     dev: true
+
+  /invariant/2.2.4:
+    resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
 
   /is-core-module/2.11.0:
     resolution: {integrity: sha512-RRjxlvLDkD1YJwDbroBHMb+cukurkDWNyHx7D3oNB5x9rb5ogcksMC5wHCadcXoo67gVr/+3GFySh3134zi6rw==}
@@ -1304,6 +1338,10 @@ packages:
       is-extendable: 0.1.1
       is-plain-object: 2.0.4
       split-string: 3.1.0
+    dev: false
+
+  /shallowequal/1.1.0:
+    resolution: {integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==}
     dev: false
 
   /source-map-js/1.0.2:
