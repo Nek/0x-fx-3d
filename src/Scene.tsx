@@ -12,6 +12,7 @@ import {
 	EffectComposer,
 	Noise,
 	Scanline,
+	Sepia,
 } from '@react-three/postprocessing'
 import { ShaderMaterial } from 'three'
 extend({ ShaderMaterial })
@@ -114,6 +115,7 @@ const Scene = () => {
 			DOF: true,
 			Scanline: false,
 			Noise: true,
+			Sepia: false,
 		}),
 	}
 
@@ -189,6 +191,8 @@ const Scene = () => {
 					<></>
 				)}
 				{plasmaData.Noise ? <Noise opacity={0.7} /> : <></>}
+				{plasmaData.Sepia ? <Sepia opacity={1} /> : <></>}
+
 			</EffectComposer>
 		</Suspense>
 	)
