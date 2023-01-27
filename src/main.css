@@ -3,6 +3,9 @@ body,
 #app,
 #app>div,
 #app>canvas {
-	height: 100%;
 	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
 }

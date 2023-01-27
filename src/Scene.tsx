@@ -68,7 +68,7 @@ const Scene = () => {
 				value: 1.0,
 			},
 			uRes: {
-				value: [256, 256],
+				value: [512, 512],
 			},
 			uAspectRatio: {
 				value: uAspectRatio,
@@ -89,23 +89,23 @@ const Scene = () => {
 			min: 2,
 			max: 50,
 			step: 1,
-			value: 12,
+			value: 8,
 		},
 		Ratios: folder({
 			R1: {
-				value: 10,
+				value: 80,
 				min: 10,
 				max: 120,
 				step: 1,
 			},
 			R2: {
-				value: 111,
+				value: 98,
 				min: 10,
 				max: 120,
 				step: 1,
 			},
 			R3: {
-				value: 47,
+				value: 14,
 				min: 10,
 				max: 120,
 				step: 1,
