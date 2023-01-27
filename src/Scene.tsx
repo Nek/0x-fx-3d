@@ -2,7 +2,9 @@ import vert from './plasma.vert?raw'
 import frag from './plasma.frag?raw'
 import { Suspense, useEffect, useMemo, useRef } from 'react'
 
-import { PerspectiveCamera, Stats, useAspect } from '@react-three/drei'
+import paletteUrl from "./palette.png"
+
+import { PerspectiveCamera, Stats, useAspect, useTexture } from '@react-three/drei'
 
 import { useControls, folder } from 'leva'
 
@@ -62,13 +64,15 @@ const Scene = () => {
 
 	const uAspectRatio = scale[0] / scale[1]
 
+	const texture: THREE.Texture = useTexture(paletteUrl)
+
 	const uniforms = useMemo(
 		() => ({
 			uTime: {
 				value: 1.0,
 			},
 			uRes: {
-				value: [512, 512],
+				value: [256, 256],
 			},
 			uAspectRatio: {
 				value: uAspectRatio,
@@ -80,6 +84,8 @@ const Scene = () => {
 				value: [20 / 100, 120 / 100, 19 / 100],
 			},
 			uFlip: { value: 1.0 },
+			uPaletteIndex: { value: 0.0 },
+			uColorTable: { value: texture },
 		}),
 		[]
 	)
@@ -112,9 +118,9 @@ const Scene = () => {
 			},
 		}),
 		FX: folder({
-			DOF: true,
+			DOF: false,
 			Scanline: false,
-			Noise: true,
+			Noise: false,
 			Sepia: false,
 		}),
 	}
@@ -134,6 +140,7 @@ const Scene = () => {
 				plasmaData.R3 / 100,
 			]
 			sphereMaterial.uniforms.uFlip.value = 1.0
+			// sphereMaterial.uniforms.uColorTable.value = texture
 		}
 		if (planeMaterialRef.current) {
 			const planeMaterial = planeMaterialRef.current
@@ -163,7 +170,7 @@ const Scene = () => {
 			<Stats />
 			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
 			<mesh scale={sphereScale}>
-				<sphereGeometry args={[1, 32, 16]} />
+				<sphereGeometry args={[1, 128, 64]} />
 				<shaderMaterial
 					ref={sphereMaterialRef}
 					uniforms={uniforms}

@@ -10,6 +10,9 @@ uniform float uFlip;
 
 varying vec2 vUv;
 
+uniform sampler2D uColorTable;
+uniform float uPaletteIndex;
+
 void main(void) {
     float scale = uScale;
     float time = uTime * 100.0;
@@ -21,7 +24,6 @@ void main(void) {
     float y = vUv.y * uRes.y;
     float h = uRes.y;
     float w = uRes.x;
-
     // float col = 
     //   sin(distance( vec2(x * r1 + time, y * r2), vec2(w / r3 , h) ) * scale) +
     //   sin(distance( vec2(x, y * r2), vec2(1.0 / h * r3, w * r1) ) * scale) +
@@ -30,9 +32,11 @@ void main(void) {
     
     // vec3 color = vec3( 0.5 + 0.5 * sin(col), cos(col), cos(col) - sin(col)) + 0.1;
     // color += mod(vUv.x, 2.0) < 1.0 ? 0.0 : 0.4; 
-
-    float r = sin(x / 8.0 + time);
-    float g = cos(x + y / 8.0 - time);
-    float b = sin(time + distance(vec2(w/2.0,h/2.0), vec2(x,y)));
-    gl_FragColor = vec4(r, g, b, 1.0);
+    float grey = (sin(x / scale / 32.0 + time / 240.0) + 1.0) / 2.0 + (sin(y / scale / 64.0 + sin(time / 120.0) * h / 16.0) + 1.0) / 2.0 + (sin((x - y) * 4.0) + 1.0) / 2.0;
+    // float r = sin(x / 128.0 + time / 5.0) + cos(y / 8.0);
+    // float g = cos((x + y) / 32.0 - time / 10.0);
+    // float b = sin(distance(vec2(w * scale / 64.0, h * scale / 128.0), vec2(x / 32.0 + time, y / 16.0)));
+    float index = fract(grey + uTime);
+    vec4 indexedColor = texture2D(uColorTable, vec2(index, 0.0));
+    gl_FragColor = indexedColor;     
 }
