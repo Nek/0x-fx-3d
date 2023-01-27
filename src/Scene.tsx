@@ -149,12 +149,21 @@ const Scene = () => {
 		}
 	})
 
+
+
+	console.log(scale[0] / scale[1])
+
+	const sphereScale =
+		scale[0] / scale[1] <= 0.7
+			? scale[0] / scale[1] * 1.7
+			: 1.2
+
 	return (
 		<Suspense fallback={'loading...'}>
 			<Stats />
 			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
-			<mesh scale={1.5}>
-				<sphereGeometry args={[1, 128, 64]} />
+			<mesh scale={sphereScale}>
+				<sphereGeometry args={[1, 32, 16]} />
 				<shaderMaterial
 					ref={sphereMaterialRef}
 					uniforms={uniforms}
@@ -192,7 +201,6 @@ const Scene = () => {
 				)}
 				{plasmaData.Noise ? <Noise opacity={0.7} /> : <></>}
 				{plasmaData.Sepia ? <Sepia opacity={1} /> : <></>}
-
 			</EffectComposer>
 		</Suspense>
 	)
