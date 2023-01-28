@@ -71,6 +71,9 @@ const Scene = () => {
 			uTime: {
 				value: 1.0,
 			},
+			uDeltaTime: {
+				value: 0.0,
+			},
 			uRes: {
 				value: [256, 256],
 			},
@@ -84,7 +87,6 @@ const Scene = () => {
 				value: [20 / 100, 120 / 100, 19 / 100],
 			},
 			uFlip: { value: 1.0 },
-			uPaletteIndex: { value: 0.0 },
 			uColorTable: { value: texture },
 		}),
 		[]
@@ -92,28 +94,28 @@ const Scene = () => {
 
 	const controls = {
 		Scale: {
-			min: 2,
+			min: 1,
 			max: 50,
 			step: 1,
-			value: 8,
+			value: 50,
 		},
 		Ratios: folder({
 			R1: {
-				value: 80,
-				min: 10,
-				max: 120,
+				value: 90,
+				min: 1,
+				max: 241,
 				step: 1,
 			},
 			R2: {
-				value: 98,
-				min: 10,
-				max: 120,
+				value: 241,
+				min: 1,
+				max: 241,
 				step: 1,
 			},
 			R3: {
-				value: 14,
-				min: 10,
-				max: 120,
+				value: 220,
+				min: 1,
+				max: 241,
 				step: 1,
 			},
 		}),
@@ -140,6 +142,7 @@ const Scene = () => {
 				plasmaData.R3 / 100,
 			]
 			sphereMaterial.uniforms.uFlip.value = 1.0
+			sphereMaterial.uniforms.uDeltaTime.value = clock.getDelta()
 			// sphereMaterial.uniforms.uColorTable.value = texture
 		}
 		if (planeMaterialRef.current) {
@@ -190,9 +193,9 @@ const Scene = () => {
 			<EffectComposer>
 				{plasmaData.DOF ? (
 					<DepthOfField
-						focusDistance={4}
-						focalLength={0.2}
-						bokehScale={2}
+						focusDistance={5}
+						focalLength={5}
+						bokehScale={1}
 						height={1024}
 					/>
 				) : (
@@ -206,7 +209,7 @@ const Scene = () => {
 				) : (
 					<></>
 				)}
-				{plasmaData.Noise ? <Noise opacity={0.7} /> : <></>}
+				{plasmaData.Noise ? <Noise blendFunction={BlendFunction.OVERLAY} opacity={0.8} /> : <></>}
 				{plasmaData.Sepia ? <Sepia opacity={1} /> : <></>}
 			</EffectComposer>
 		</Suspense>
