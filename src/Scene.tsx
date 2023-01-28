@@ -7,7 +7,7 @@ import {
 	useRef,
 } from 'react'
 
-import paletteUrl from './palette.png'
+import paletteUrl from './palette5.png'
 
 import {
 	CubeCamera,
@@ -133,9 +133,9 @@ const Scene = () => {
 			},
 		}),
 		FX: folder({
-			DOF: false,
+			DOF: true,
 			Scanline: false,
-			Noise: false,
+			Noise: true,
 			Sepia: false,
 		}),
 	}
@@ -180,7 +180,7 @@ const Scene = () => {
 			<Stats />
 			<rectAreaLight width={7} height={7} position={[0, 5, 2]} visible={true} intensity={3} color={0xFFFFFF} />
 			<rectAreaLight width={7} height={7} position={[0, -5, 1]} visible={true} intensity={4} color={0xFFFFFF} />
-			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
+			<PerspectiveCamera far={15} near={2} makeDefault position={[0, 0, 5]} />
 			<CubeCamera>
 				{/*@ts-ignore*/}
 				{(texture) => (
@@ -190,7 +190,7 @@ const Scene = () => {
 							mirror={0.5}
 							metalness={0}
 							envMapIntensity={0.5}
-							color={0xaa55ff}
+							color={0x997799}
 							roughness={0.1}
 							envMap={texture}
 							resolution={1024}
@@ -211,10 +211,7 @@ const Scene = () => {
 			<EffectComposer>
 				{plasmaData.DOF ? (
 					<DepthOfField
-						focusDistance={5}
-						focalLength={5}
-						bokehScale={1}
-						height={1024}
+
 					/>
 				) : (
 					<></>
