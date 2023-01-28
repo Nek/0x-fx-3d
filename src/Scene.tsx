@@ -110,23 +110,23 @@ const Scene = () => {
 			min: 1,
 			max: 50,
 			step: 1,
-			value: 50,
+			value: 32,
 		},
 		Ratios: folder({
 			R1: {
-				value: 90,
+				value: 45,
 				min: 1,
 				max: 241,
 				step: 1,
 			},
 			R2: {
-				value: 241,
+				value: 97,
 				min: 1,
 				max: 241,
 				step: 1,
 			},
 			R3: {
-				value: 220,
+				value: 108,
 				min: 1,
 				max: 241,
 				step: 1,
@@ -190,10 +190,10 @@ const Scene = () => {
 							mirror={0.5}
 							metalness={0}
 							envMapIntensity={0.5}
-							color={0x997799}
+							color={0x9977EE}
 							roughness={0.1}
 							envMap={texture}
-							resolution={1024}
+							resolution={256}
 						/>
 					</mesh>
 				)}
@@ -211,7 +211,7 @@ const Scene = () => {
 			<EffectComposer>
 				{plasmaData.DOF ? (
 					<DepthOfField
-
+						bokehScale={0.5}
 					/>
 				) : (
 					<></>
@@ -219,7 +219,7 @@ const Scene = () => {
 				{plasmaData.Scanline ? (
 					<Scanline
 						blendFunction={BlendFunction.OVERLAY} // blend mode
-						density={1.25} // scanline density
+						density={3.2} // scanline density
 					/>
 				) : (
 					<></>
