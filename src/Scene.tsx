@@ -21,6 +21,7 @@ import {
 import { useControls, folder } from 'leva'
 
 import { BlendFunction } from 'postprocessing'
+
 import {
 	DepthOfField,
 	EffectComposer,
@@ -28,11 +29,12 @@ import {
 	Scanline,
 	Sepia,
 } from '@react-three/postprocessing'
-import { useFrame, useThree } from '@react-three/fiber'
+import { extend, useFrame, useThree } from '@react-three/fiber'
 
 import { el } from '@elemaudio/core'
 import WebRenderer from '@elemaudio/web-renderer'
-import { BackSide, ShaderMaterial } from 'three'
+import { BackSide, ShaderMaterial, RectAreaLight } from 'three'
+extend({ ShaderMaterial, RectAreaLight, BackSide })
 
 const ctx = new AudioContext()
 const core = new WebRenderer()
@@ -176,7 +178,8 @@ const Scene = () => {
 	return (
 		<Suspense fallback={'loading...'}>
 			<Stats />
-			<ambientLight color={0x404040} />
+			<rectAreaLight width={7} height={7} position={[0, 5, 2]} visible={true} intensity={3} color={0xFFFFFF} />
+			<rectAreaLight width={7} height={7} position={[0, -5, 1]} visible={true} intensity={4} color={0xFFFFFF} />
 			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
 			<CubeCamera>
 				{/*@ts-ignore*/}
@@ -184,18 +187,18 @@ const Scene = () => {
 					<mesh scale={sphereScale} position={[0, 0, 0]}>
 						<sphereGeometry args={[1, 128, 64]} />
 						<MeshReflectorMaterial
-							mirror={0}
-							metalness={1}
+							mirror={0.5}
+							metalness={0}
 							envMapIntensity={0.5}
-							color={0xeeeeee}
-							roughness={0.2}
+							color={0xaa55ff}
+							roughness={0.1}
 							envMap={texture}
-							resolution={512}
+							resolution={1024}
 						/>
 					</mesh>
 				)}
 			</CubeCamera>
-			<mesh position={[0, 0, 0]} rotation={[0, 0, 0]}>
+			<mesh scale={sphereScale * 1.5} position={[0, 0, 0]} rotation={[0, 0, 0]}>
 				<sphereGeometry args={[5, 64, 32]} />
 				<shaderMaterial
 					side={BackSide}
