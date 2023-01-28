@@ -64,7 +64,7 @@ const Scene = () => {
 
 	const uAspectRatio = scale[0] / scale[1]
 
-	const texture: THREE.Texture = useTexture(paletteUrl)
+	const texture = useTexture(paletteUrl)
 
 	const uniforms = useMemo(
 		() => ({
