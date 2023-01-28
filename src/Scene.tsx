@@ -179,6 +179,7 @@ const Scene = () => {
 			<ambientLight color={0x404040} />
 			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
 			<CubeCamera>
+				{/*@ts-ignore*/}
 				{(texture) => (
 					<mesh scale={sphereScale} position={[0, 0, 0]}>
 						<sphereGeometry args={[1, 128, 64]} />
