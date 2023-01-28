@@ -7,7 +7,7 @@ import {
 	useRef,
 } from 'react'
 
-import paletteUrl from './palette5.png'
+import paletteUrl from './palette3.png'
 
 import {
 	CubeCamera,
