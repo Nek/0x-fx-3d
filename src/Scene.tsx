@@ -1,6 +1,11 @@
 import vert from './plasma.vert?raw'
 import frag from './plasma.frag?raw'
-import { Suspense, useEffect, useMemo, useRef } from 'react'
+import {
+	Suspense,
+	useEffect,
+	useMemo,
+	useRef,
+} from 'react'
 
 import paletteUrl from './palette.png'
 
@@ -10,8 +15,6 @@ import {
 	Stats,
 	useAspect,
 	useTexture,
-	MeshRefractionMaterial,
-	SpotLight,
 	MeshReflectorMaterial,
 } from '@react-three/drei'
 
@@ -25,12 +28,11 @@ import {
 	Scanline,
 	Sepia,
 } from '@react-three/postprocessing'
-import { BackSide, DoubleSide, ShaderMaterial } from 'three'
-extend({ ShaderMaterial })
-import { extend, useFrame, useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 
 import { el } from '@elemaudio/core'
 import WebRenderer from '@elemaudio/web-renderer'
+import { BackSide, ShaderMaterial } from 'three'
 
 const ctx = new AudioContext()
 const core = new WebRenderer()
@@ -180,7 +182,15 @@ const Scene = () => {
 				{(texture) => (
 					<mesh scale={sphereScale} position={[0, 0, 0]}>
 						<sphereGeometry args={[1, 128, 64]} />
-						<MeshReflectorMaterial metalness={1} envMapIntensity={0.5} color={0xEEEEEE} roughness={0.2} envMap={texture} resolution={512} />
+						<MeshReflectorMaterial
+							mirror={0}
+							metalness={1}
+							envMapIntensity={0.5}
+							color={0xeeeeee}
+							roughness={0.2}
+							envMap={texture}
+							resolution={512}
+						/>
 					</mesh>
 				)}
 			</CubeCamera>
@@ -220,7 +230,7 @@ const Scene = () => {
 				)}
 				{plasmaData.Sepia ? <Sepia opacity={1} /> : <></>}
 			</EffectComposer>
-		</Suspense >
+		</Suspense>
 	)
 }
 
