@@ -1,8 +1,8 @@
 import { createRoot, events, extend } from '@react-three/fiber'
 import { StrictMode } from 'react'
 
-import { Group, Mesh, PerspectiveCamera, PlaneGeometry, SphereGeometry } from 'three'
-extend({ Group, Mesh, PerspectiveCamera, PlaneGeometry, SphereGeometry })
+import { Group, Mesh, PerspectiveCamera, PlaneGeometry, SphereGeometry, CubeCamera, AmbientLight, MeshStandardMaterial } from 'three'
+extend({ Group, Mesh, PerspectiveCamera, PlaneGeometry, SphereGeometry, CubeCamera, AmbientLight, MeshStandardMaterial })
 
 import Scene from './Scene'
 import './main.css'

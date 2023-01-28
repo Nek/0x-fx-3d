@@ -2,9 +2,18 @@ import vert from './plasma.vert?raw'
 import frag from './plasma.frag?raw'
 import { Suspense, useEffect, useMemo, useRef } from 'react'
 
-import paletteUrl from "./palette.png"
+import paletteUrl from './palette.png'
 
-import { PerspectiveCamera, Stats, useAspect, useTexture } from '@react-three/drei'
+import {
+	CubeCamera,
+	PerspectiveCamera,
+	Stats,
+	useAspect,
+	useTexture,
+	MeshRefractionMaterial,
+	SpotLight,
+	MeshReflectorMaterial,
+} from '@react-three/drei'
 
 import { useControls, folder } from 'leva'
 
@@ -16,7 +25,7 @@ import {
 	Scanline,
 	Sepia,
 } from '@react-three/postprocessing'
-import { ShaderMaterial } from 'three'
+import { BackSide, DoubleSide, ShaderMaterial } from 'three'
 extend({ ShaderMaterial })
 import { extend, useFrame, useThree } from '@react-three/fiber'
 
@@ -159,31 +168,26 @@ const Scene = () => {
 		}
 	})
 
-
-
-	console.log(scale[0] / scale[1])
-
 	const sphereScale =
-		scale[0] / scale[1] <= 0.7
-			? scale[0] / scale[1] * 1.7
-			: 1.2
+		scale[0] / scale[1] <= 0.7 ? (scale[0] / scale[1]) * 1.7 : 1.2
 
 	return (
 		<Suspense fallback={'loading...'}>
 			<Stats />
+			<ambientLight color={0x404040} />
 			<PerspectiveCamera makeDefault position={[0, 0, 5]} />
-			<mesh scale={sphereScale}>
-				<sphereGeometry args={[1, 128, 64]} />
+			<CubeCamera>
+				{(texture) => (
+					<mesh scale={sphereScale} position={[0, 0, 0]}>
+						<sphereGeometry args={[1, 128, 64]} />
+						<MeshReflectorMaterial metalness={1} envMapIntensity={0.5} color={0xEEEEEE} roughness={0.2} envMap={texture} resolution={512} />
+					</mesh>
+				)}
+			</CubeCamera>
+			<mesh position={[0, 0, 0]} rotation={[0, 0, 0]}>
+				<sphereGeometry args={[5, 64, 32]} />
 				<shaderMaterial
-					ref={sphereMaterialRef}
-					uniforms={uniforms}
-					fragmentShader={frag}
-					vertexShader={vert}
-				/>
-			</mesh>
-			<mesh scale={scale}>
-				<planeGeometry args={[1, 1]} />
-				<shaderMaterial
+					side={BackSide}
 					ref={planeMaterialRef}
 					uniforms={uniforms}
 					fragmentShader={frag}
@@ -209,10 +213,14 @@ const Scene = () => {
 				) : (
 					<></>
 				)}
-				{plasmaData.Noise ? <Noise blendFunction={BlendFunction.OVERLAY} opacity={0.8} /> : <></>}
+				{plasmaData.Noise ? (
+					<Noise blendFunction={BlendFunction.OVERLAY} opacity={0.8} />
+				) : (
+					<></>
+				)}
 				{plasmaData.Sepia ? <Sepia opacity={1} /> : <></>}
 			</EffectComposer>
-		</Suspense>
+		</Suspense >
 	)
 }
 
