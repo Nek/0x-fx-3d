@@ -5,7 +5,11 @@ export default defineConfig({
   plugins: [react()],
   base: './',
   build: {
-    outDir: 'docs',
+    minify: 'terser',
+    target: 'ES6',
     emptyOutDir: true,
+    rollupOptions: {
+      treeshake: true,
+    },
   },
 })

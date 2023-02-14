@@ -1,6 +1,6 @@
 import vert from './plasma.vert?raw'
 import frag from './plasma.frag?raw'
-import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import paletteUrl from './palette3.png'
 
@@ -15,9 +15,6 @@ import {
 
 import { useControls, folder } from 'leva'
 
-//@ts-ignore
-import { BlendFunction } from 'postprocessing'
-
 import {
   DepthOfField,
   EffectComposer,
@@ -30,7 +27,6 @@ import { extend, useFrame, useThree } from '@react-three/fiber'
 
 import { el } from '@elemaudio/core'
 import WebRenderer from '@elemaudio/web-renderer'
-import { BackSide, RectAreaLight } from 'three'
 
 import {
   AmbientLight,
@@ -42,6 +38,8 @@ import {
   PlaneGeometry,
   SphereGeometry,
   ShaderMaterial,
+  BackSide,
+  RectAreaLight,
 } from 'three'
 
 extend({
@@ -198,7 +196,7 @@ const Scene = () => {
     scale[0] / scale[1] <= 0.7 ? (scale[0] / scale[1]) * 1.7 : 1.2
 
   return (
-    <Suspense fallback={'loading...'}>
+    <>
       <Stats />
       <rectAreaLight
         width={7}
@@ -248,20 +246,23 @@ const Scene = () => {
         {plasmaData.DOF ? <DepthOfField bokehScale={0.5} /> : <></>}
         {plasmaData.Scanline ? (
           <Scanline
-            blendFunction={BlendFunction.OVERLAY} // blend mode
+            // blendFunction={BlendFunction.OVERLAY} // blend mode
             density={3.2} // scanline density
           />
         ) : (
           <></>
         )}
         {plasmaData.Noise ? (
-          <Noise blendFunction={BlendFunction.OVERLAY} opacity={0.8} />
+          <Noise
+            // blendFunction={BlendFunction.OVERLAY}
+            opacity={0.8}
+          />
         ) : (
           <></>
         )}
         {plasmaData.Sepia ? <Sepia opacity={1} /> : <></>}
       </EffectComposer>
-    </Suspense>
+    </>
   )
 }
 

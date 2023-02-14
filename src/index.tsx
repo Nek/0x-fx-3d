@@ -1,4 +1,4 @@
-import { createRoot, events, extend } from '@react-three/fiber'
+import { createRoot, events } from '@react-three/fiber'
 
 import Scene from './Scene'
 import './main.css'
