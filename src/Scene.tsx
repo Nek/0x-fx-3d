@@ -21,6 +21,7 @@ import {
   Noise,
   Scanline,
   Sepia,
+  //@ts-ignore
 } from '@react-three/postprocessing'
 
 import { extend, useFrame, useThree } from '@react-three/fiber'
@@ -70,8 +71,6 @@ const Scene = () => {
 
       node.connect(ctx.destination)
       core.on('load', function () {
-        // Before actually rendering anything we put a click handler on the button so that
-        // this example doesn't start making noise automatically
         window.addEventListener('click', async function (_) {
           if (ctx.state === 'suspended') {
             await ctx.resume()
@@ -176,7 +175,6 @@ const Scene = () => {
       ]
       sphereMaterial.uniforms.uFlip.value = 1.0
       sphereMaterial.uniforms.uDeltaTime.value = clock.getDelta()
-      // sphereMaterial.uniforms.uColorTable.value = texture
     }
     if (planeMaterialRef.current) {
       const planeMaterial = planeMaterialRef.current
@@ -246,7 +244,6 @@ const Scene = () => {
         {plasmaData.DOF ? <DepthOfField bokehScale={0.5} /> : <></>}
         {plasmaData.Scanline ? (
           <Scanline
-            // blendFunction={BlendFunction.OVERLAY} // blend mode
             density={3.2} // scanline density
           />
         ) : (
@@ -254,7 +251,6 @@ const Scene = () => {
         )}
         {plasmaData.Noise ? (
           <Noise
-            // blendFunction={BlendFunction.OVERLAY}
             opacity={0.8}
           />
         ) : (
